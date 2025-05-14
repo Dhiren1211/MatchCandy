@@ -1,0 +1,345 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.game-container {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    max-width: 420px;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-header {
+    margin-bottom: 10px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.level-info, .moves-info, .score-info, .goal-info {
+    text-align: center;
+    background-color: #f8f9fa;
+    padding: 6px 10px;
+    border-radius: 10px;
+    min-width: 70px;
+}
+
+.label {
+    display: block;
+    font-size: 11px;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.value {
+    font-weight: 700;
+    font-size: 16px;
+    color: #495057;
+}
+
+.header-bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-container {
+    flex-grow: 1;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.mission-box {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mission-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.mission-text {
+    font-size: 12px;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-color: #f1f3f5;
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 12px;
+}
+
+.tile {
+    background-color: white;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px; /* Increased font size for better visibility */
+    font-weight: bold; /* Make the candy symbols bold */
+    cursor: pointer;
+    transition: transform 0.2s, left 0.3s ease, top 0.3s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    height: 100%; /* Ensure tiles fill the grid cell */
+    width: 100%; /* Ensure tiles fill the grid cell */
+}
+
+.tile::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tile:hover::after {
+    opacity: 1;
+}
+
+.tile.selected {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 2px #4facfe;
+}
+
+.tile.matched {
+    animation: pop 0.4s ease-out forwards;
+    z-index: 10;
+}
+
+.tile.special-bomb {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.tile.special-launcher {
+    background-color: #74b9ff;
+    color: white;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes swap {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(var(--tx), var(--ty)); }
+}
+
+@keyframes bomb-explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes launcher-fire {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    justify-content: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.hint {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+}
+
+.sound {
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 80%;
+    width: 300px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal h2 {
+    margin-bottom: 15px;
+    color: #4facfe;
+}
+
+.result-stats {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.result-stats div {
+    margin-bottom: 8px;
+}
+
+.falling {
+    animation: fall 0.5s ease-out forwards;
+}
+
+@keyframes fall {
+    from { transform: translateY(-500px); }
+    to { transform: translateY(0); }
+}
+
+.bomb-explosion {
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255,107,107,0.8) 0%, rgba(255,107,107,0) 70%);
+    border-radius: 50%;
+    animation: bomb-explode 0.5s ease-out forwards;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.launcher-beam {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(116,185,255,0.8) 0%, rgba(116,185,255,0) 100%);
+    animation: launcher-fire 0.5s ease-out forwards;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.horizontal-beam {
+    width: 1000%;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.vertical-beam {
+    width: 100%;
+    height: 1000%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 400px) {
+    .tile {
+        font-size: 18px;
+    }
+    
+    .label {
+        font-size: 10px;
+    }
+    
+    .value {
+        font-size: 14px;
+    }
+    
+    .mission-label {
+        font-size: 12px;
+    }
+    
+    .mission-text {
+        font-size: 11px;
+    }
+}
